@@ -1,0 +1,115 @@
+# Build outputs
+node_modules
+dist
+dist-ssr
+*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+web_modules/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional caches
+.eslintcache
+.stylelintcache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn files
+.yarn-integrity
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Environment variables
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Build caches
+.cache
+.parcel-cache
+
+# Framework specific
+.next
+out
+.nuxt
+.docusaurus
+.svelte-kit
+.vuepress/dist
+.temp
+
+# Serverless directories
+.serverless/
+.fusebox/
+.webpack/
+
+# Database
+.dynamodb/
+
+# IDE files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+.DS_*
+Thumbs.db
+
+# Backup files
+**/*.backup.*
+**/*.back.*
+
+# Design files
+*.sublime*
+psd
+thumb
+sketch
+
+# Other
+.tern-port
+.vscode-test
