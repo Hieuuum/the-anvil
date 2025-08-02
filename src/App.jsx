@@ -5,7 +5,7 @@ import { useState, useRef } from "react";
 function App() {
 	const [startTime, setStartTime] = useState(null);
 	const [now, setNow] = useState(null);
-	const [totalTime, setTotalTime] = useState(null);
+	const [sessionLength, setSessionLength] = useState(null);
 	const intervalRef = useRef(null);
 
 	function handleStart() {
@@ -15,11 +15,19 @@ function App() {
 		clearInterval(intervalRef.current);
 		intervalRef.current = setInterval(() => {
 			setNow(Date.now());
-		}, 100);
+		}, 1000);
 	}
 
 	function handleStop() {
 		clearInterval(intervalRef.current);
+	}
+
+	function formatTime(seconds) {
+		const secondsLeft = Math.floor(seconds % 60);
+		const minutesLeft = Math.floor(seconds / 60);
+		const hoursLeft = Math.floor(seconds / 3600);
+		console.log(minutesLeft);
+		return `You have ${hoursLeft} hours ${minutesLeft} minutes ${secondsLeft} seconds left.`;
 	}
 
 	let secondsPassed = 0;
@@ -30,8 +38,23 @@ function App() {
 	return (
 		<>
 			<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-				<p>Pomodoro session: {secondsPassed.toFixed(0)}</p>
-				<p>Current Time: {secondsPassed.toFixed(0)}</p>
+				<div className="mb-4">
+					<label className="block text-sm font-medium mb-2">
+						Session Length (minutes):
+					</label>
+					<input
+						type="number"
+						min="1"
+						max="120"
+						value={sessionLength}
+						onChange={(e) => setSessionLength(Number(e.target.value))}
+						className="px-3 py-2 border rounded-md"
+					/>
+				</div>
+				<p>
+					{sessionLength != null &&
+						formatTime(sessionLength * 60 - secondsPassed)}
+				</p>
 				<div className="flex gap-2">
 					<button
 						onClick={handleStart}
