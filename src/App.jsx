@@ -115,8 +115,7 @@ function App() {
 							</label>
 							<input
 								type="number"
-								min="1"
-								max="120"
+								min="0.51"
 								value={sessionLength}
 								onChange={(e) => setSessionLength(Number(e.target.value))}
 								className="w-32 px-4 py-3 text-center text-xl border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors"
@@ -175,7 +174,7 @@ function App() {
 						{startTime === null ? (
 							<button
 								onClick={handleStart}
-								className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105"
+								className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 cursor-pointer"
 							>
 								Start Timer
 							</button>
@@ -183,13 +182,13 @@ function App() {
 							<>
 								<button
 									onClick={handleClear}
-									className="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105"
+									className="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 cursor-pointer"
 								>
 									Reset
 								</button>
 								<button
 									onClick={handlePause}
-									className={`flex-1 font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 ${
+									className={`flex-1 font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 cursor-pointer ${
 										isPaused
 											? "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
 											: "bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white"
