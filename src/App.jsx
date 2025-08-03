@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 
@@ -10,6 +10,14 @@ function App() {
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [isPaused, setIsPaused] = useState(false);
 	const [pauseStartTime, setPauseStartTime] = useState(null);
+
+	useEffect(() => {
+		return () => {
+			if (intervalRef.current) {
+				clearInterval(intervalRef.current);
+			}
+		};
+	}, []);
 
 	function handleStart() {
 		if (!sessionLength || sessionLength < 0) {
@@ -25,7 +33,7 @@ function App() {
 		clearInterval(intervalRef.current);
 		intervalRef.current = setInterval(() => {
 			setNow(Date.now());
-		}, 900);
+		}, 100);
 	}
 
 	function handlePause() {
@@ -86,9 +94,7 @@ function App() {
 		<>
 			<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
 				{startTime === null ? (
-					<div
-						className={`flex flex-col items-center justify-center ${startTime !== null ? "invisible" : "visible"}`}
-					>
+					<div className="flex flex-col items-center justify-center">
 						<label className="block font-bold mb-2 text-xl">
 							Session Length (minutes)
 						</label>
@@ -112,7 +118,6 @@ function App() {
 						formatTime(sessionLength * 60 - secondsPassed)}
 				</p>
 				<div className="flex items-center justify-center gap-2">
-					<button></button>
 					{startTime === null ? (
 						<button
 							onClick={handleStart}
