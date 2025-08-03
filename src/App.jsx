@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 
@@ -9,6 +9,7 @@ function App() {
 	const intervalRef = useRef(null);
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [isPaused, setIsPaused] = useState(false);
+	const [pauseStartTime, setPauseStartTime] = useState(null);
 
 	function handleStart() {
 		if (!sessionLength || sessionLength < 0) {
@@ -18,6 +19,8 @@ function App() {
 		setStartTime(Date.now());
 		setNow(Date.now());
 		setIsCompleted(false);
+		setIsPaused(false);
+		setPauseStartTime(null);
 
 		clearInterval(intervalRef.current);
 		intervalRef.current = setInterval(() => {
@@ -25,11 +28,31 @@ function App() {
 		}, 900);
 	}
 
-	function handleStop() {
+	function handlePause() {
+		if (isPaused) {
+			// Resuming
+			setStartTime((prev) => prev + Date.now() - pauseStartTime);
+			setPauseStartTime(null);
+			intervalRef.current = setInterval(() => {
+				setNow(Date.now());
+			}, 900);
+		} else {
+			// Pausing
+			setPauseStartTime(Date.now());
+			clearInterval(intervalRef.current);
+		}
+		setIsPaused((val) => {
+			return !val;
+		});
+	}
+
+	function handleClear() {
 		clearInterval(intervalRef.current);
 		setStartTime(null);
 		setNow(null);
 		setIsCompleted(false);
+		setIsPaused(false);
+		setPauseStartTime(null);
 	}
 
 	function formatTime(secs) {
@@ -41,19 +64,6 @@ function App() {
 			return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 		}
 		return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-	}
-
-	function handlePause() {
-		if (isPaused) {
-			intervalRef.current = setInterval(() => {
-				setNow(Date.now());
-			}, 900);
-		} else {
-			clearInterval(intervalRef.current);
-		}
-		setIsPaused((val) => {
-			return !val;
-		});
 	}
 
 	let secondsPassed = 0;
@@ -72,38 +82,30 @@ function App() {
 		}
 	}
 
-	// Calculate progress
-	// const progress =
-	// 	sessionLength > 0
-	// 		? Math.min((secondsPassed / (sessionLength * 60)) * 100, 100)
-	// 		: 0;
-
-	// useEffect(() => {
-	// 	return () => {
-	// 		if (intervalRef.current) {
-	// 			clearInterval(intervalRef.current);
-	// 		}
-	// 	};
-	// }, []);
-
 	return (
 		<>
 			<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-				<div
-					className={`flex flex-col items-center justify-center ${startTime !== null ? "invisible" : "visible"}`}
-				>
+				{startTime === null ? (
+					<div
+						className={`flex flex-col items-center justify-center ${startTime !== null ? "invisible" : "visible"}`}
+					>
+						<label className="block font-bold mb-2 text-xl">
+							Session Length (minutes)
+						</label>
+						<input
+							type="number"
+							min="1"
+							max="120"
+							value={sessionLength}
+							onChange={(e) => setSessionLength(Number(e.target.value))}
+							className={`px-3 py-2 border rounded-md`}
+						/>
+					</div>
+				) : (
 					<label className="block font-bold mb-2 text-xl">
-						Session Length (minutes)
+						{isPaused ? "Paused" : "Running..."}
 					</label>
-					<input
-						type="number"
-						min="1"
-						max="120"
-						value={sessionLength}
-						onChange={(e) => setSessionLength(Number(e.target.value))}
-						className={`px-3 py-2 border rounded-md`}
-					/>
-				</div>
+				)}
 				<p className="flex items-center justify-center">
 					{startTime !== null &&
 						now !== null &&
@@ -116,21 +118,21 @@ function App() {
 							onClick={handleStart}
 							className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
 						>
-							Start Timer
+							Start
 						</button>
 					) : (
 						<>
 							<button
-								onClick={handleStop}
-								className={`mt-4 px-4 py-2 bg-blue-500 text-white rounded ${startTime === null ? "invisible" : "visible"}`}
+								onClick={handleClear}
+								className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
 							>
-								Clear Timer
+								Clear
 							</button>
 							<button
 								onClick={handlePause}
-								className={`mt-4 px-4 py-2 bg-blue-500 text-white rounded ${startTime === null ? "invisible" : "visible"}`}
+								className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
 							>
-								Pause Timer
+								{isPaused ? "Resume" : "Pause"}
 							</button>
 						</>
 					)}
