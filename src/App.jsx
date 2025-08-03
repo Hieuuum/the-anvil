@@ -5,29 +5,36 @@ import { useState, useRef } from "react";
 function App() {
 	const [startTime, setStartTime] = useState(null);
 	const [now, setNow] = useState(null);
-	const [sessionLength, setSessionLength] = useState(null);
+	const [sessionLength, setSessionLength] = useState(30);
 	const intervalRef = useRef(null);
 
 	function handleStart() {
+		if (!sessionLength || sessionLength < 0) {
+			alert("Please set a valid session length");
+			return;
+		}
 		setStartTime(Date.now());
 		setNow(Date.now());
 
 		clearInterval(intervalRef.current);
 		intervalRef.current = setInterval(() => {
 			setNow(Date.now());
-		}, 1000);
+		}, 900);
 	}
 
 	function handleStop() {
 		clearInterval(intervalRef.current);
 	}
 
-	function formatTime(seconds) {
-		const secondsLeft = Math.floor(seconds % 60);
-		const minutesLeft = Math.floor(seconds / 60);
-		const hoursLeft = Math.floor(seconds / 3600);
-		console.log(minutesLeft);
-		return `You have ${hoursLeft} hours ${minutesLeft} minutes ${secondsLeft} seconds left.`;
+	function formatTime(secs) {
+		const totalSeconds = Math.floor(secs);
+		const hours = Math.floor(totalSeconds / 3600);
+		const minutes = Math.floor((totalSeconds % 3600) / 60);
+		const seconds = Math.floor(totalSeconds % 60);
+		if (hours > 0) {
+			return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+		}
+		return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 	}
 
 	let secondsPassed = 0;
