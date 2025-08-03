@@ -33,24 +33,26 @@ function App() {
 		clearInterval(intervalRef.current);
 		intervalRef.current = setInterval(() => {
 			setNow(Date.now());
-		}, 100);
+		}, 900);
 	}
 
 	function handlePause() {
-		if (isPaused) {
-			// Resuming
-			setStartTime((prev) => prev + Date.now() - pauseStartTime);
-			setPauseStartTime(null);
-			intervalRef.current = setInterval(() => {
+		setIsPaused((prevVal) => {
+			if (prevVal) {
+				// Resuming
+
+				setStartTime((prev) => prev + Date.now() - pauseStartTime);
 				setNow(Date.now());
-			}, 900);
-		} else {
-			// Pausing
-			setPauseStartTime(Date.now());
-			clearInterval(intervalRef.current);
-		}
-		setIsPaused((val) => {
-			return !val;
+				intervalRef.current = setInterval(() => {
+					setNow(Date.now());
+				}, 900);
+				setPauseStartTime(null);
+			} else {
+				// Pausing
+				setPauseStartTime(Date.now());
+				clearInterval(intervalRef.current);
+			}
+			return !prevVal;
 		});
 	}
 
@@ -78,69 +80,126 @@ function App() {
 	let timeRemaining = 0;
 	if (startTime != null && now != null) {
 		secondsPassed = (now - startTime) / 1000;
-		timeRemaining = sessionLength * 60 - secondsPassed;
+		timeRemaining = Math.max(0, sessionLength * 60 - secondsPassed);
+	}
 
-		// Check if session is completed
-		if (timeRemaining <= 0 && !isCompleted) {
+	// Check if session is completed
+	useEffect(() => {
+		// Check if the timer is active and has run out
+		if (startTime && !isPaused && timeRemaining <= 0 && !isCompleted) {
 			setIsCompleted(true);
 			clearInterval(intervalRef.current);
 			alert("Session Completed!");
+			// Reset the timer state after completion
 			setStartTime(null);
 			setNow(null);
 		}
-	}
+		// This effect should run whenever these dependencies change
+	}, [timeRemaining, startTime, isPaused, isCompleted]);
 
 	return (
 		<>
-			<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-				{startTime === null ? (
-					<div className="flex flex-col items-center justify-center">
-						<label className="block font-bold mb-2 text-xl">
-							Session Length (minutes)
-						</label>
-						<input
-							type="number"
-							min="1"
-							max="120"
-							value={sessionLength}
-							onChange={(e) => setSessionLength(Number(e.target.value))}
-							className={`px-3 py-2 border rounded-md`}
-						/>
+			<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+				<div className="bg-white rounded-2xl p-8 w-full max-w-md">
+					{/* Header */}
+					<div className="text-center mb-8">
+						<h1 className="text-3xl font-bold text-gray-800 mb-2">The Anvil</h1>
+						<p className="text-gray-600">Stay focused and productive</p>
 					</div>
-				) : (
-					<label className="block font-bold mb-2 text-xl">
-						{isPaused ? "Paused" : "Running..."}
-					</label>
-				)}
-				<p className="flex items-center justify-center">
-					{startTime !== null &&
-						now !== null &&
-						formatTime(sessionLength * 60 - secondsPassed)}
-				</p>
-				<div className="flex items-center justify-center gap-2">
+
+					{/* Session Length Input */}
 					{startTime === null ? (
-						<button
-							onClick={handleStart}
-							className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-						>
-							Start
-						</button>
+						<div className="text-center mb-6">
+							<label className="block text-lg font-semibold text-gray-700 mb-3">
+								Session Length (minutes)
+							</label>
+							<input
+								type="number"
+								min="1"
+								max="120"
+								value={sessionLength}
+								onChange={(e) => setSessionLength(Number(e.target.value))}
+								className="w-32 px-4 py-3 text-center text-xl border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors"
+								placeholder="25"
+							/>
+						</div>
 					) : (
-						<>
-							<button
-								onClick={handleClear}
-								className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+						<div className="text-center mb-6">
+							<div
+								className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${
+									isPaused
+										? "bg-yellow-100 text-yellow-800"
+										: "bg-green-100 text-green-800"
+								}`}
 							>
-								Clear
-							</button>
-							<button
-								onClick={handlePause}
-								className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-							>
-								{isPaused ? "Resume" : "Pause"}
-							</button>
-						</>
+								<div
+									className={`w-2 h-2 rounded-full mr-2 ${
+										isPaused ? "bg-yellow-500" : "bg-green-500 animate-pulse"
+									}`}
+								></div>
+								{isPaused ? "Paused" : "Running"}
+							</div>
+						</div>
 					)}
+
+					{/* Timer Display */}
+					<div className="text-center mb-8">
+						<div className="bg-gray-50 rounded-2xl p-6 mb-4">
+							<div className="text-5xl font-mono font-bold text-gray-800 mb-2">
+								{startTime !== null && now !== null
+									? formatTime(Math.max(0, sessionLength * 60 - secondsPassed))
+									: formatTime(sessionLength * 60)}
+							</div>
+							<div className="text-sm text-gray-500">
+								{startTime !== null
+									? `${sessionLength} minute session`
+									: "Ready to start"}
+							</div>
+						</div>
+
+						{/* Progress Bar */}
+						{startTime !== null && (
+							<div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+								<div
+									className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-1000"
+									style={{
+										width: `${Math.min((secondsPassed / (sessionLength * 60)) * 100, 100)}%`,
+									}}
+								></div>
+							</div>
+						)}
+					</div>
+
+					{/* Action Buttons */}
+					<div className="flex gap-3">
+						{startTime === null ? (
+							<button
+								onClick={handleStart}
+								className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105"
+							>
+								Start Timer
+							</button>
+						) : (
+							<>
+								<button
+									onClick={handleClear}
+									className="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105"
+								>
+									Reset
+								</button>
+								<button
+									onClick={handlePause}
+									className={`flex-1 font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 ${
+										isPaused
+											? "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
+											: "bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white"
+									}`}
+								>
+									{isPaused ? "Resume" : "Pause"}
+								</button>
+							</>
+						)}
+					</div>
 				</div>
 			</div>
 		</>
