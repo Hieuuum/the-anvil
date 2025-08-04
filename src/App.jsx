@@ -37,11 +37,11 @@ function App() {
 	}
 
 	function handlePause() {
-		setIsPaused((prevVal) => {
-			if (prevVal) {
+		setIsPaused((ip) => {
+			if (ip) {
 				// Resuming
 
-				setStartTime((prev) => prev + Date.now() - pauseStartTime);
+				setStartTime((st) => st + Date.now() - pauseStartTime);
 				setNow(Date.now());
 				intervalRef.current = setInterval(() => {
 					setNow(Date.now());
@@ -52,7 +52,7 @@ function App() {
 				setPauseStartTime(Date.now());
 				clearInterval(intervalRef.current);
 			}
-			return !prevVal;
+			return !ip;
 		});
 	}
 
@@ -104,6 +104,11 @@ function App() {
 					{/* Header */}
 					<div className="text-center mb-8">
 						<h1 className="text-3xl font-bold text-gray-800 mb-2">The Anvil</h1>
+						<img
+							src="/anvil-impact.svg"
+							className="h-20 w-20 mx-auto ml-36 mb-2"
+							alt="Anvil Impact"
+						/>
 						<p className="text-gray-600">Stay focused and productive</p>
 					</div>
 
