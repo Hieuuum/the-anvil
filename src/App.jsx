@@ -105,7 +105,7 @@ function App() {
 					<div className="text-center mb-8">
 						<h1 className="text-3xl font-bold text-gray-800 mb-2">The Anvil</h1>
 						<img
-							src="/anvil-impact.svg"
+							src="/favicon.svg"
 							className="h-20 w-20 mx-auto ml-36 mb-2"
 							alt="Anvil Impact"
 						/>
