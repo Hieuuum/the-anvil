@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from "react";
+import Header from "./components/Header.jsx";
+import TimeInput from "./components/TimeInput.jsx";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 
@@ -101,32 +103,14 @@ function App() {
 		<>
 			<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
 				<div className="bg-white rounded-2xl p-8 w-full max-w-md">
-					{/* Header */}
-					<div className="text-center mb-8">
-						<h1 className="text-3xl font-bold text-gray-800 mb-2">The Anvil</h1>
-						<img
-							src="/favicon.svg"
-							className="h-20 w-20 mx-auto ml-36 mb-2"
-							alt="Anvil Impact"
-						/>
-						<p className="text-gray-600">Stay focused and productive</p>
-					</div>
+					<Header />
 
 					{/* Session Length Input */}
 					{startTime === null ? (
-						<div className="text-center mb-6">
-							<label className="block text-lg font-semibold text-gray-700 mb-3">
-								Session Length (minutes)
-							</label>
-							<input
-								type="number"
-								min="0.51"
-								value={sessionLength}
-								onChange={(e) => setSessionLength(Number(e.target.value))}
-								className="w-32 px-4 py-3 text-center text-xl border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors"
-								placeholder="25"
-							/>
-						</div>
+						<TimeInput
+							sessionLength={sessionLength}
+							setSessionLength={setSessionLength}
+						/>
 					) : (
 						<div className="text-center mb-6">
 							<div
