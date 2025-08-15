@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Header from "./components/Header.jsx";
 import TimeInput from "./components/TimeInput.jsx";
+import StatusBox from "./components/StatusBox.jsx";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 
@@ -112,22 +113,7 @@ function App() {
 							setSessionLength={setSessionLength}
 						/>
 					) : (
-						<div className="text-center mb-6">
-							<div
-								className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${
-									isPaused
-										? "bg-yellow-100 text-yellow-800"
-										: "bg-green-100 text-green-800"
-								}`}
-							>
-								<div
-									className={`w-2 h-2 rounded-full mr-2 ${
-										isPaused ? "bg-yellow-500" : "bg-green-500 animate-pulse"
-									}`}
-								></div>
-								{isPaused ? "Paused" : "Running"}
-							</div>
-						</div>
+						<StatusBox isPaused={isPaused} />
 					)}
 
 					{/* Timer Display */}
