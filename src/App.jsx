@@ -2,6 +2,7 @@ import Header from "./components/Header.jsx";
 import useTimer from "./hooks/useTimer.jsx";
 import formatTime from "./utils/formatTime.js";
 import View from "./components/View.jsx";
+import ChatPanel from "./components/ChatPanel.jsx";
 import CompletedView from "./components/CompletedView.jsx";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
@@ -45,6 +46,7 @@ function App() {
 							formatTime={formatTime}
 						/>
 					)}
+					<ChatPanel />
 				</div>
 			</div>
 		</>
