@@ -6,7 +6,7 @@ function TimeInput(props) {
 			</label>
 			<input
 				type="number"
-				min="0.51"
+				min="0"
 				value={props.sessionLength}
 				onChange={(e) => props.setSessionLength(Number(e.target.value))}
 				className="w-32 px-4 py-3 text-center text-xl border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors"

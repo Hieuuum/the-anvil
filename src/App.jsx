@@ -1,10 +1,8 @@
 import Header from "./components/Header.jsx";
-import TimeInput from "./components/TimeInput.jsx";
-import StatusBox from "./components/StatusBox.jsx";
-import TimerDisplay from "./components/TimerDisplay.jsx";
-import Button from "./components/Button.jsx";
 import useTimer from "./hooks/useTimer.jsx";
 import formatTime from "./utils/formatTime.js";
+import View from "./components/View.jsx";
+import CompletedView from "./components/CompletedView.jsx";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 
@@ -20,6 +18,7 @@ function App() {
 		sessionLength,
 		setSessionLength,
 		isCompleted,
+		status,
 	} = useTimer(30);
 
 	return (
@@ -28,45 +27,23 @@ function App() {
 				<div className="bg-white rounded-2xl p-8 w-full max-w-md">
 					<Header />
 
-					{isCompleted ? (
-						// The new "Completed" UI state
-						<CompletedState behavior={reset} />
+					{status === "completed" ? (
+						<CompletedView onReset={reset} />
 					) : (
-						<div>
-							{/* Session Length Input */}
-							{startTime === null ? (
-								<TimeInput
-									sessionLength={sessionLength}
-									setSessionLength={setSessionLength}
-								/>
-							) : (
-								<StatusBox isPaused={isPaused} />
-							)}
-
-							{/* Timer Display */}
-							<TimerDisplay
-								startTime={startTime}
-								sessionLength={sessionLength}
-								now={now}
-								secondsPassed={secondsPassed}
-								formatTime={formatTime}
-							/>
-
-							{/* Action Buttons */}
-							<div className="flex gap-3">
-								{startTime === null ? (
-									<Button behavior={start} type="start" />
-								) : (
-									<>
-										<Button behavior={reset} type="reset" />
-										<Button
-											behavior={pause}
-											type={isPaused ? "resume" : "pause"}
-										/>
-									</>
-								)}
-							</div>
-						</div>
+						<View
+							status={status}
+							startTime={startTime}
+							isPaused={isPaused}
+							now={now}
+							secondsPassed={secondsPassed}
+							pause={pause}
+							reset={reset}
+							start={start}
+							sessionLength={sessionLength}
+							setSessionLength={setSessionLength}
+							isCompleted={isCompleted}
+							formatTime={formatTime}
+						/>
 					)}
 				</div>
 			</div>

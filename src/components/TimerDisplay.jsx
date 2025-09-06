@@ -1,4 +1,5 @@
 import ProgressBar from "./ProgressBar.jsx";
+import formatTime from "../utils/formatTime.js";
 
 function TimerDisplay(props) {
 	return (
@@ -6,10 +7,10 @@ function TimerDisplay(props) {
 			<div className="bg-gray-50 rounded-2xl p-6 mb-4">
 				<div className="text-5xl font-mono font-bold text-gray-800 mb-2">
 					{props.startTime !== null && props.now !== null
-						? props.formatTime(
+						? formatTime(
 								Math.max(0, props.sessionLength * 60 - props.secondsPassed)
 							)
-						: props.formatTime(props.sessionLength * 60)}
+						: formatTime(props.sessionLength * 60)}
 				</div>
 				<div className="text-sm text-gray-500">
 					{props.startTime !== null

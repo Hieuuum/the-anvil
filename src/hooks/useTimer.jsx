@@ -86,10 +86,16 @@ export default function useTimer(timeInput = 30) {
 		if (startTime && !isPaused && timeRemaining <= 0 && !isCompleted) {
 			setIsCompleted(true);
 			clearInterval(intervalRef.current);
-			// Reset the timer state after completion
 		}
 		// This effect should run whenever these dependencies change
 	}, [timeRemaining, startTime, isPaused, isCompleted]);
+
+	const status = useMemo(() => {
+		if (isCompleted) return "completed";
+		if (startTime === null) return "idle";
+		if (isPaused) return "paused";
+		return "running";
+	}, [isCompleted, startTime, isPaused]);
 
 	return {
 		startTime,
@@ -102,5 +108,6 @@ export default function useTimer(timeInput = 30) {
 		sessionLength,
 		setSessionLength,
 		isCompleted,
+		status,
 	};
 }
