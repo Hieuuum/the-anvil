@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 
-const TICK_INTERVAL_MS = 450;
-
 export default function useTimer(timeInput = 30) {
+	const TICK_INTERVAL_MS = 450;
+
 	const [startTime, setStartTime] = useState(null);
 	const [now, setNow] = useState(null);
 	const [sessionLength, setSessionLength] = useState(timeInput);
@@ -65,7 +65,7 @@ export default function useTimer(timeInput = 30) {
 	}, []);
 
 	const secondsPassed = useMemo(() => {
-		if (startTime === null && now === null) {
+		if (startTime === null || now === null) {
 			return 0;
 		} else {
 			return (now - startTime) / 1000;
@@ -87,8 +87,6 @@ export default function useTimer(timeInput = 30) {
 			setIsCompleted(true);
 			clearInterval(intervalRef.current);
 			// Reset the timer state after completion
-			// setStartTime(null);
-			// setNow(null);
 		}
 		// This effect should run whenever these dependencies change
 	}, [timeRemaining, startTime, isPaused, isCompleted]);

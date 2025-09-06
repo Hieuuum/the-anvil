@@ -10,7 +10,7 @@ function TimeInput(props) {
 				value={props.sessionLength}
 				onChange={(e) => props.setSessionLength(Number(e.target.value))}
 				className="w-32 px-4 py-3 text-center text-xl border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors"
-				placeholder="25"
+				placeholder="30"
 			/>
 		</div>
 	);
