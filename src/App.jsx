@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import Header from "./components/Header.jsx";
 import TimeInput from "./components/TimeInput.jsx";
 import StatusBox from "./components/StatusBox.jsx";
+import TimerDisplay from "./components/TimerDisplay.jsx";
+import Button from "./components/Button.jsx";
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 
@@ -59,7 +61,7 @@ function App() {
 		});
 	}
 
-	function handleClear() {
+	function handleReset() {
 		clearInterval(intervalRef.current);
 		setStartTime(null);
 		setNow(null);
@@ -117,60 +119,25 @@ function App() {
 					)}
 
 					{/* Timer Display */}
-					<div className="text-center mb-8">
-						<div className="bg-gray-50 rounded-2xl p-6 mb-4">
-							<div className="text-5xl font-mono font-bold text-gray-800 mb-2">
-								{startTime !== null && now !== null
-									? formatTime(Math.max(0, sessionLength * 60 - secondsPassed))
-									: formatTime(sessionLength * 60)}
-							</div>
-							<div className="text-sm text-gray-500">
-								{startTime !== null
-									? `${sessionLength} minute session`
-									: "Ready to start"}
-							</div>
-						</div>
-
-						{/* Progress Bar */}
-						{startTime !== null && (
-							<div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-								<div
-									className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all duration-1000"
-									style={{
-										width: `${Math.min((secondsPassed / (sessionLength * 60)) * 100, 100)}%`,
-									}}
-								></div>
-							</div>
-						)}
-					</div>
+					<TimerDisplay
+						startTime={startTime}
+						sessionLength={sessionLength}
+						now={now}
+						secondsPassed={secondsPassed}
+						formatTime={formatTime}
+					/>
 
 					{/* Action Buttons */}
 					<div className="flex gap-3">
 						{startTime === null ? (
-							<button
-								onClick={handleStart}
-								className="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 cursor-pointer"
-							>
-								Start Timer
-							</button>
+							<Button behavior={handleStart} type="start" />
 						) : (
 							<>
-								<button
-									onClick={handleClear}
-									className="flex-1 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 cursor-pointer"
-								>
-									Reset
-								</button>
-								<button
-									onClick={handlePause}
-									className={`flex-1 font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 cursor-pointer ${
-										isPaused
-											? "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white"
-											: "bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white"
-									}`}
-								>
-									{isPaused ? "Resume" : "Pause"}
-								</button>
+								<Button behavior={handleReset} type="reset" />
+								<Button
+									behavior={handlePause}
+									type={isPaused ? "resume" : "pause"}
+								/>
 							</>
 						)}
 					</div>
