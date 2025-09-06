@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 
 const TICK_INTERVAL_MS = 450;
 
@@ -64,12 +64,21 @@ export default function useTimer(timeInput = 30) {
 		setPauseStartTime(null);
 	}, []);
 
-	let secondsPassed = 0;
-	let timeRemaining = 0;
-	if (startTime != null && now != null) {
-		secondsPassed = (now - startTime) / 1000;
-		timeRemaining = Math.max(0, sessionLength * 60 - secondsPassed);
-	}
+	const secondsPassed = useMemo(() => {
+		if (startTime === null && now === null) {
+			return 0;
+		} else {
+			return (now - startTime) / 1000;
+		}
+	}, [now, startTime]);
+
+	const timeRemaining = useMemo(() => {
+		if (startTime === null && now === null) {
+			return 0;
+		} else {
+			return Math.max(0, sessionLength * 60 - secondsPassed);
+		}
+	}, [now, startTime, sessionLength, secondsPassed]);
 
 	// Check if session is completed
 	useEffect(() => {
