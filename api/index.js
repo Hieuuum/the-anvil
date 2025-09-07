@@ -11,7 +11,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.post("/send", async (req, res) => {
+app.post("/chat", async (req, res) => {
 	// console.log(req.body.msg);
 	const response = await client.responses.create({
 		model: "gpt-4o-mini",
