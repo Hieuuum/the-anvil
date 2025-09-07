@@ -38,7 +38,7 @@ export default function App() {
 		setInput("");
 
 		try {
-			const url = "http://localhost:3001/send";
+			const url = "/chat";
 			const response = await axios.post(url, { msg: text });
 			const aiReply = response.data;
 

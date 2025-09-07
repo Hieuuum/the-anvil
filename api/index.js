@@ -6,7 +6,6 @@ import bodyParser from "body-parser";
 
 const client = new OpenAI();
 const app = express();
-const port = 3001;
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,6 +22,4 @@ app.post("/send", async (req, res) => {
 	// res.json("#  I don't know   How about you?");
 });
 
-app.listen(port, () => {
-	console.log(`Successfully started server on port ${port}.`);
-});
+export default app;
